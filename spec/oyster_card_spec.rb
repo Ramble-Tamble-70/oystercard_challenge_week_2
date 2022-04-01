@@ -52,5 +52,13 @@ describe Oystercard do
       subject.touch_out(:station_exited)
       expect(subject.journey_history).to eq(['Entered at: station_entered, exited at: station_exited'])
     end
+
+    it "will deduct the penalty if they touch in again without touching out" do
+      expect { subject.touch_in(station_entered) }.to change{ subject.balance }.by(-6)
+    end
+  end
+
+  it "will deduct penalty fare when forgetting to touch in" do
+    expect { subject.touch_out(station_exited) }.to change{ subject.balance }.by(-6)
   end
 end
