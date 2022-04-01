@@ -3,7 +3,7 @@
 require_relative '../lib/oyster_card'
 
 describe Oystercard do
-  let(:station_entered) { double(:station) }
+  let(:station_entered){ double(:station) }
   let(:station_exited) { double(:station) }
 
   it 'has a balance of zero when created' do
