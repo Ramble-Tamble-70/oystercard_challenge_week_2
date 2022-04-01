@@ -29,11 +29,6 @@ describe Oystercard do
     expect { subject.touch_in(:station_entered) }.to raise_error('Insufficient balance')
   end
 
-  it 'remembers the entry station after touching in' do
-    subject.top_up(5)
-    expect { subject.touch_in(:station_entered) }.to change { subject.entry_station }.to(:station_entered)
-  end
-
   describe 'with positive balance and touched in' do
     before(:each) do
       subject.top_up(5)
@@ -53,7 +48,7 @@ describe Oystercard do
       expect { subject.touch_out(:station_exited) }.to change { subject.balance }.by(-1)
     end
 
-    it 'will record exit station and add to journey history' do
+    it 'adds to journey history after touching out' do
       subject.touch_out(:station_exited)
       expect(subject.journey_history).to eq(['Entered at: station_entered, exited at: station_exited'])
     end

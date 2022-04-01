@@ -18,8 +18,13 @@ describe Journey do
   end
 
   context "#fare" do
-    it "returns the minimum fare" do
+    it "returns the minimum fare after finishing the journey" do
+      journey.finish(station_exited)
       expect(journey.fare).to eq 1
+    end
+
+    it "returns a penalty fare if journey incomplete" do
+      expect(journey.fare).to eq Journey::PENALTY_FARE
     end
   end
 

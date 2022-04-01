@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../lib/oyster_card'
+require_relative './journey'
 
 class Oystercard
-  attr_reader :balance, :max_balance, :entry_station, :list_of_journeys
+  attr_reader :balance, :max_balance, :entry_station, :list_of_journeys 
 
   MAXIMUM_BALANCE = 90
   MINIMUM_BALANCE = 1
@@ -11,8 +11,8 @@ class Oystercard
   def initialize
     @balance = 0
     @max_balance = MAXIMUM_BALANCE
-    @entry_station = nil
     @list_of_journeys = []
+    @current_journey = nil
   end
 
   def top_up(amount)
@@ -23,26 +23,26 @@ class Oystercard
   end
 
   def in_journey?
-    @entry_station != nil
+    @current_journey != nil
   end
 
   def touch_in(station)
     raise 'Insufficient balance' if insufficient_balance?
-    @entry_station = station
-
+    @current_journey = Journey.new(station)
   end
 
   def touch_out(exit_station)
-    @list_of_journeys.push({ entry: @entry_station, exit: exit_station })
-    @entry_station = nil
+    @current_journey.finish(exit_station)
+    @list_of_journeys.push( @current_journey )
     deduct(MINIMUM_BALANCE)
     'Journey complete.'
+    @current_journey = nil
   end
 
   def journey_history
     journey_history = []
     @list_of_journeys.each do |journey|
-      journey_history.push("Entered at: #{journey[:entry]}, exited at: #{journey[:exit]}")
+      journey_history.push("Entered at: #{journey.entry_station}, exited at: #{journey.exit_station}")
     end
     journey_history unless journey_history.empty?
   end
